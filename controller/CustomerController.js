@@ -10,7 +10,7 @@ const create=(req, res)=>{
         mobile:req.body.mobile
     });
     customer.save().then(customer=>{
-        return res.status(200).json({'message':'Customer Saved'});
+        return res.status(200).json({'message':'Customer Saved'},{customer});
     }).catch(err=>{
         return res.status(500).json(err);
     });
