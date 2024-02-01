@@ -17,6 +17,9 @@ const port= process.env.SERVER_PORT | 3000;
 const app = express();
 
 const userRoute= require('./routes/UserRoute');
+const customerRoute= require('./routes/CustomerRoute');
+const productRoute= require('./routes/ProductRoute');
+const orderRoute= require('./routes/OrderRoute');
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -33,3 +36,6 @@ app.get('/test-api',(req, res)=>{
 })
 
 app.use('/api/v1/users',userRoute);
+app.use('/api/v1/customers',customerRoute);
+app.use('/api/v1/products',productRoute);
+app.use('/api/v1/orders',orderRoute);

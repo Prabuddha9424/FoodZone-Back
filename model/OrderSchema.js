@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const OrderSchema=new mongoose({
+const OrderSchema=new mongoose.Schema({
     product:{
         type:Array,
         required:true
