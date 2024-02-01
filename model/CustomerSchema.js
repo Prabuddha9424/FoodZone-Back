@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const CustomerSchema=new mongoose({
+const CustomerSchema=new mongoose.Schema({
     fullName:{
         type:String,
         required:true
