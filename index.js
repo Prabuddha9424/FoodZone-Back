@@ -15,14 +15,17 @@ require('dotenv').config();
 const bodyParser = require('body-parser');
 const port= process.env.SERVER_PORT | 3000;
 const app = express();
+const cors = require('cors')
 
 const userRoute= require('./routes/UserRoute');
 const customerRoute= require('./routes/CustomerRoute');
 const productRoute= require('./routes/ProductRoute');
 const orderRoute= require('./routes/OrderRoute');
+const adminRoute=require('./routes/AdminUserRoute')
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
+app.use(cors())
 
 mongoose.connect('mongodb://localhost:27017/foodzone').then(()=>{
     app.listen(port,()=>{
@@ -39,3 +42,4 @@ app.use('/api/v1/users',userRoute);
 app.use('/api/v1/customers',customerRoute);
 app.use('/api/v1/products',productRoute);
 app.use('/api/v1/orders',orderRoute);
+app.use('/api/v1/admin',adminRoute);
