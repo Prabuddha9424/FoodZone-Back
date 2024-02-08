@@ -1,16 +1,19 @@
 const CustomerSchema = require('../model/CustomerSchema');
 const {query} = require("express");
+const AdminUserSchema = require("../model/AdminUserSchema");
 
 /*-------------------Create New Customer-----------------------*/
 const create=(req, res)=>{
     const customer= new CustomerSchema({
-        fullName:req.body.fullName,
+        name:req.body.name,
         email:req.body.email,
+        password:req.body.password,
+        image:req.body.image,
         address:req.body.address,
-        mobile:req.body.mobile
+        phone:req.body.phone
     });
     customer.save().then(customer=>{
-        return res.status(200).json({'message':'Customer Saved'},{customer});
+        return res.status(200).json({'message':'Customer Saved'});
     }).catch(err=>{
         return res.status(500).json(err);
     });
@@ -44,15 +47,20 @@ const update=async (req, res)=>{
 };
 /*-------------------Delete Customer-----------------------*/
 const deleteById=async (req, res)=>{
-    const deleteCustomer=await CustomerSchema.findOneAndUpdate({'_id':req.params.id});
-    if (deleteCustomer){
-        return res.status(200).json({'message':'Customer Deleted'});
-    }else {
-        return res.status(500).json({'message':'internal server error!'});
+    try{
+        const deleteCustomer=await CustomerSchema.findByIdAndDelete(req.params.id);
+        if (deleteCustomer){
+            return res.status(200).json({'message':'Customer Deleted'});
+        }else {
+            return res.status(404).json({ 'message': 'Customer not found' });
+        }
+    }catch (err){
+        return res.status(500).json({ 'message': 'Internal Server Error' });
     }
+
 };
 /*-------------------Find All Customers-----------------------*/
-const findAll=(req, res)=>{
+const findAll=async (req, res)=>{
     try{
         const {searchText, page=1, size=10}=req.query;
 
@@ -66,13 +74,27 @@ const findAll=(req, res)=>{
 
         const skip=(pageNumber-1)*pageSize;
 
-        const data=CustomerSchema.find(query).limit(pageSize).skip(skip);
+        const data=await CustomerSchema.find(query).limit(pageSize).skip(skip);
         return res.status(200).json(data);
     }catch (error){
-        return res.status(500).json({'message':'internal server error'});
+        //return res.status(500).json({'message':'internal server error'});
+        return res.status(500).json(error);
     }
 };
+/*-------------------Count all documents in  Customer-----------------------*/
+const customerCount=async (req, res)=>{
+    try{
+        const countCustomers=await CustomerSchema.countDocuments();
+        if (countCustomers){
+            return res.status(200).json(countCustomers);
+        }else {
+            return res.status(404).json({ 'message': 'No Any Customers' });
+        }
+    }catch (err){
+        return res.status(500).json({ 'message': 'Internal Server Error' });
+    }
 
+};
 module.exports={
-    create, findById, update, deleteById, findAll
+    create, findById, update, deleteById, findAll, customerCount
 }

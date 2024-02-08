@@ -2,14 +2,14 @@ const OrderSchema = require('../model/OrderSchema');
 
 const create=(req, res)=>{
     const order= new OrderSchema({
-        product:req.body.product,
-        customerDetails:req.body.customerDetails,
+        item:req.body.item,
+        userData:req.body.userData,
         qty:req.body.qty,
+        status:req.body.status,
         price:req.body.price,
-        token:req.body.token
     });
-    order.save().then(customer=>{
-        return res.status(200).json({'message':'Order Placed'},{customer});
+    order.save().then(order=>{
+        return res.status(200).json({'message':'Order Placed'});
     }).catch(err=>{
         return res.status(500).json(err);
     });
@@ -27,11 +27,11 @@ const findById=(req, res)=>{
 const update=async (req, res)=>{
     const updatedOrder=await OrderSchema.findOneAndUpdate({'_id':req.params.id},{
         $set:{
-            product:req.body.product,
-            customerDetails:req.body.customerDetails,
+            item:req.body.item,
+            userData:req.body.userData,
             qty:req.body.qty,
+            status:req.body.status,
             price:req.body.price,
-            token:req.body.token
         }
     },{new:true} );
     if (updatedOrder){
@@ -41,14 +41,14 @@ const update=async (req, res)=>{
     }
 };
 const deleteById=async (req, res)=>{
-    const deleteOrder=await OrderSchema.findOneAndUpdate({'_id':req.params.id});
+    const deleteOrder=await OrderSchema.findByIdAndDelete({'_id':req.params.id});
     if (deleteOrder){
         return res.status(200).json({'message':'Order Deleted'});
     }else {
         return res.status(500).json({'message':'internal server error!'});
     }
 };
-const findAll=(req, res)=>{
+const findAll=async (req, res)=>{
     try{
         const {searchText, page=1, size=10}=req.query;
 
@@ -62,7 +62,7 @@ const findAll=(req, res)=>{
 
         const skip=(pageNumber-1)*pageSize;
 
-        const data=OrderSchema.find(query).limit(pageSize).skip(skip);
+        const data=await OrderSchema.find(query).limit(pageSize).skip(skip);
         return res.status(200).json(data);
     }catch (error){
         return res.status(500).json({'message':'internal server error'});

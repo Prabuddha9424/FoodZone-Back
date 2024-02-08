@@ -77,8 +77,8 @@ const update=async (req, res)=>{
 /*-------------------Delete Customer-----------------------*/
 const deleteById=async (req, res)=>{
     try{
-        const deleteCustomer=await AdminUserSchema.findByIdAndDelete(req.params.id);
-        if (deleteCustomer){
+        const deleteAdminUser=await AdminUserSchema.findByIdAndDelete(req.params.id);
+        if (deleteAdminUser){
             return res.status(200).json({'message':'Admin User Deleted'});
         }else {
             return res.status(404).json({ 'message': 'Admin User not found' });
@@ -88,7 +88,7 @@ const deleteById=async (req, res)=>{
     }
 
 };
-/*-------------------Find All Customers-----------------------*/
+/*-------------------Find All Admin Users-----------------------*/
 const findAll=async (req, res)=>{
     try{
         const {searchText, page=1, size=10}=req.query;

@@ -1,6 +1,10 @@
 const mongoose=require('mongoose');
 const CustomerSchema=new mongoose.Schema({
-    fullName:{
+    name:{
+        type:String,
+        required:true
+    },
+    image:{
         type:String,
         required:true
     },
@@ -16,7 +20,7 @@ const CustomerSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    mobile:{
+    phone:{
         type:Number,
         required:true
     },

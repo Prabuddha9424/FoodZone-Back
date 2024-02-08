@@ -1,11 +1,12 @@
 const ProductSchema = require('../model/ProductSchema');
-const CustomerSchema = require("../model/CustomerSchema");
 
 const create=(req, res)=>{
     const customer= new ProductSchema({
         name:req.body.name,
         price:req.body.price,
+        category:req.body.category,
         qty:req.body.qty,
+        intro:req.body.intro,
         image:req.body.image
     });
     customer.save().then(customer=>{
@@ -29,7 +30,9 @@ const update=async (req, res)=>{
         $set:{
             name:req.body.name,
             price:req.body.price,
+            category:req.body.category,
             qty:req.body.qty,
+            intro:req.body.intro,
             image:req.body.image
         }
     },{new:true} );
@@ -40,14 +43,14 @@ const update=async (req, res)=>{
     }
 };
 const deleteById=async (req, res)=>{
-    const deleteProduct=await ProductSchema.findOneAndUpdate({'_id':req.params.id});
+    const deleteProduct=await ProductSchema.findByIdAndDelete({'_id':req.params.id});
     if (deleteProduct){
         return res.status(200).json({'message':'Product Deleted'});
     }else {
         return res.status(500).json({'message':'internal server error!'});
     }
 };
-const findAll=(req, res)=>{
+const findAll=async (req, res)=>{
     try{
         const {searchText, page=1, size=10}=req.query;
 
@@ -61,7 +64,7 @@ const findAll=(req, res)=>{
 
         const skip=(pageNumber-1)*pageSize;
 
-        const data=ProductSchema.find(query).limit(pageSize).skip(skip);
+        const data=await ProductSchema.find(query).limit(pageSize).skip(skip);
         return res.status(200).json(data);
     }catch (error){
         return res.status(500).json({'message':'internal server error'});
