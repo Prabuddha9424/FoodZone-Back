@@ -1,4 +1,5 @@
 const OrderSchema = require('../model/OrderSchema');
+const ProductSchema = require("../model/ProductSchema");
 
 const create=(req, res)=>{
     const order= new OrderSchema({
@@ -68,7 +69,19 @@ const findAll=async (req, res)=>{
         return res.status(500).json({'message':'internal server error'});
     }
 };
+const ordersCount=async (req, res)=>{
+    try{
+        const countOrders=await OrderSchema.countDocuments();
+        if (countOrders){
+            return res.status(200).json(countOrders);
+        }else {
+            return res.status(404).json({ 'message': 'No Any Orders'});
+        }
+    }catch (err){
+        return res.status(500).json({ 'message': 'Internal Server Error' });
+    }
+};
 
 module.exports={
-    create, findById, update, deleteById, findAll
+    create, findById, update, deleteById, findAll, ordersCount
 }

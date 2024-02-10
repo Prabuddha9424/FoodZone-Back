@@ -1,7 +1,7 @@
 const AdminUserSchema = require('../model/AdminUserSchema')
-const {query} = require("express");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
+const jsonwebtoken = require("jsonwebtoken");
 const salt = 10;
 
 /*-------------------Create New Admin User-----------------------*/
@@ -47,6 +47,30 @@ const create=(req, res)=>{
         }
     })
 };
+/*-------------------Login Admin User-----------------------*/
+const login = (req, res) => {
+    AdminUserSchema.findOne({email: req.body.email}).then(admin=>{
+        if (admin!==null){
+            bcrypt.compare(req.body.password,admin.password,function (err, result){
+                if (err){
+                    return res.status(500).json({'message':'Internal Server Error!'});
+                }
+                if (result){
+                    const payload={email:admin.email}
+                    const secretKey=process.env.SECRET_KEY;
+                    const expiresIn='24h';
+
+                    const token=jsonwebtoken.sign(payload, secretKey, {expiresIn});
+                    return res.status(200).json({'token':token});
+                }else {
+                    return res.status(401).json({'message':'Password is Wrong!'});
+                }
+            })
+        }else {
+            return res.status(404).json({'message':'Admin Not Found!'});
+        }
+    })
+}
 /*-------------------Find Customer-----------------------*/
 const findById=(req, res)=>{
     AdminUserSchema.findOne({'_id': req.params.id}).then(customerObj=>{
@@ -111,5 +135,5 @@ const findAll=async (req, res)=>{
 };
 
 module.exports={
-    create, findById, update, deleteById, findAll
+    create, findById, update, deleteById, findAll, login
 }
