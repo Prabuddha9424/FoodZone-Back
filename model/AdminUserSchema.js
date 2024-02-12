@@ -1,11 +1,8 @@
 const mongoose=require('mongoose');
-const CustomerSchema=new mongoose.Schema({
+const AdminUserSchema=new mongoose.Schema({
     name:{
         type:String,
         required:true
-    },
-    image:{
-        type:String,
     },
     email:{
         type:String,
@@ -20,8 +17,8 @@ const CustomerSchema=new mongoose.Schema({
         required:true
     },
     phone:{
-        type:Number,
+        type:String,
         required:true
     },
 });
-module.exports = mongoose.model('customer',CustomerSchema);
+module.exports = mongoose.model('admin',AdminUserSchema);

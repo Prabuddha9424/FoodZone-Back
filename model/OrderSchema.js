@@ -1,23 +1,27 @@
 const mongoose=require('mongoose');
 const OrderSchema=new mongoose.Schema({
-    product:{
-        type:Array,
+    item:{
+        type:String,
         required:true
     },
-    customerDetails:{
-        type:Object,
+    email:{
+        type:String,
         required:true
     },
     qty:{
         type:Number,
         required:true
     },
-    price:{
+    status:{
         type:Number,
         required:true
     },
-    token:{
-        type:String,
+    payStatus:{
+        type:Number,
+        required:true
+    },
+    price:{
+        type:Number,
         required:true
     },
 });
