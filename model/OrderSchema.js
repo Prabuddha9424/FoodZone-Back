@@ -4,8 +4,8 @@ const OrderSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    userData:{
-        type:Object,
+    email:{
+        type:String,
         required:true
     },
     qty:{
@@ -13,6 +13,10 @@ const OrderSchema=new mongoose.Schema({
         required:true
     },
     status:{
+        type:Number,
+        required:true
+    },
+    payStatus:{
         type:Number,
         required:true
     },

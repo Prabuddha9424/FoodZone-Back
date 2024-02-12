@@ -8,6 +8,7 @@ router.post('/login',AdminUserController.login);
 router.get('/find-by-id',verifyUser,AdminUserController.findById);
 router.put('/update/:id',verifyUser,AdminUserController.update);
 router.delete('/delete-by-id/:id',verifyUser,AdminUserController.deleteById);
+router.post('/reset-password',verifyUser,AdminUserController.resetPassword);
 router.get('/find-all',verifyUser,AdminUserController.findAll);
 
 module.exports=router

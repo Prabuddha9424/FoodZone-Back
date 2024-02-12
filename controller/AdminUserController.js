@@ -2,6 +2,7 @@ const AdminUserSchema = require('../model/AdminUserSchema')
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jsonwebtoken = require("jsonwebtoken");
+
 const salt = 10;
 
 /*-------------------Create New Admin User-----------------------*/
@@ -71,7 +72,53 @@ const login = (req, res) => {
         }
     })
 }
-/*-------------------Find Customer-----------------------*/
+/*-------------------Reset Admin Password-----------------------*/
+const resetPassword = async (req, res) => {
+   /* const updatedAdmin=await AdminUserSchema.findOneAndUpdate({email: req.body.email},{
+        $set:{
+            name:req.body.name,
+            price:req.body.price,
+            category:req.body.category,
+            qty:req.body.qty,
+            intro:req.body.intro,
+            image:req.body.image
+        }
+    },{new:true} );
+    if (updatedProduct){
+        return res.status(200).json({'message':'Product Updated'});
+    }else {
+        return res.status(500).json({'message':'internal server error!'});
+    }*/
+
+    AdminUserSchema.findOne({ email: req.body.email })
+        .then(admin => {
+            if (!admin) {
+                return res.status(404).json({ message: 'Admin not found' });
+            }
+            console.log(req.body.currentPassword);
+            console.log(admin.password);
+            bcrypt.compare(req.body.currentPassword, admin.password, (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Internal Server Error' });
+                }
+                if (!result) {
+                    return res.status(401).json({ message: 'Current password is incorrect' });
+                }
+                admin.password = bcrypt.hashSync(req.body.password, salt);
+                admin.save()
+                    .then(() => {
+                        return res.status(200).json({ message: 'Password updated successfully' });
+                    })
+                    .catch(err => {
+                        return res.status(500).json(err);
+                    });
+            });
+        })
+        .catch(err => {
+            return res.status(500).json({ message: 'Internal Server Error' });
+        });
+};
+/*-------------------Find Admin-----------------------*/
 const findById=(req, res)=>{
     AdminUserSchema.findOne({'_id': req.params.id}).then(customerObj=>{
         if (customerObj!==null){
@@ -135,5 +182,5 @@ const findAll=async (req, res)=>{
 };
 
 module.exports={
-    create, findById, update, deleteById, findAll, login
+    create, findById, update, deleteById, findAll, login, resetPassword
 }
